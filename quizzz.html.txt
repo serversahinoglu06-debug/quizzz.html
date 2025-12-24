@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<title>Güz Güzeli Final Sınavı</title>
+
+<style>
+body{
+    font-family:"Segoe UI",sans-serif;
+    background:linear-gradient(135deg,#ffd6e8,#fff);
+}
+.container{
+    background:white;
+    padding:30px;
+    max-width:900px;
+    margin:auto;
+    border-radius:15px;
+    box-shadow:0 0 15px rgba(0,0,0,0.1);
+}
+h1,h2{text-align:center;color:#d63384}
+.timer{
+    text-align:center;
+    font-size:20px;
+    color:#b3005e;
+    margin-bottom:15px;
+}
+.question{margin-bottom:22px}
+.feedback{margin-top:5px;font-weight:bold;color:#d63384}
+textarea{
+    width:100%;height:110px;
+    border-radius:8px;padding:10px
+}
+button{
+    background:#d63384;color:white;
+    border:none;padding:12px 30px;
+    font-size:16px;border-radius:25px;
+    cursor:pointer
+}
+.result{text-align:center;font-size:18px;margin-top:25px}
+.heart{
+    position:fixed;color:pink;
+    animation:float 4s infinite;
+}
+@keyframes float{
+    0%{bottom:0;opacity:1}
+    100%{bottom:100%;opacity:0}
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+<h1>💗 GÜZ GÜZELİ FİNAL SINAVI 💗</h1>
+<h2>Adınız Soyadınız: ____ <br> Sınav Tarihi: ____</h2>
+
+<p style="text-align:center">
+<b>Güz güzeli sınavına girmektesiniz.<br>
+Bu sınavdan kalmak yok. Kalp işi bu 💞</b>
+</p>
+
+<div class="timer">⏰ Kalan Süre: <span id="time">05:00</span></div>
+<hr>
+
+<form id="quiz"></form>
+
+<h3>✍️ Yorum Soruları</h3>
+
+<p>Beni ne kadar sevdiğini 5 cümle ile açıkla</p>
+<textarea placeholder="Buraya kalbini bırakabilirsin..."></textarea>
+
+<p>Benimle olmasını istediğin 3 hayalini yaz</p>
+<textarea></textarea>
+
+<p>Bende en çok sevdiğin özelliği yaz</p>
+<textarea></textarea>
+
+<br>
+<div style="text-align:center">
+<button type="button" onclick="finish()">Sınavı Bitir</button>
+</div>
+
+<div class="result" id="result"></div>
+</div>
+
+<script>
+const questions=[
+["En sevdiğim film?",["Hızlı ve Öfkeli","Madagaskar","Buz Devri","Big Hero"],0],
+["Hayali arabam?",["BMW E60 M5","Scirocco","GTR-35","Skyline R34"],0],
+["Sevgilimle yapmak istediğim aktivite?",["CS2","F1","Futbol","Yüzmek"],0],
+["Doğum tarihim?",["19 Şubat 2001","20 Kasım 2001","5 Ekim 2001","5 Ekim 2000"],0],
+["Tuttuğum takım?",["Adana Demirspor","Beşiktaş","Real Madrid"],1]
+];
+
+let score=0;
+let answered=Array(questions.length).fill(false);
+const form=document.getElementById("quiz");
+
+questions.forEach((q,i)=>{
+let div=document.createElement("div");
+div.className="question";
+div.innerHTML=<b>${i+1}) ${q[0]}</b><br>;
+q[1].forEach((opt,j)=>{
+div.innerHTML+=`
+<label>
+<input type="radio" name="q${i}" onclick="check(${i},${j})"> ${opt}
+</label><br>`;
+});
+div.innerHTML+=<div class="feedback" id="f${i}"></div>;
+form.appendChild(div);
+});
+
+function check(i,j){
+if(answered[i]) return;
+let f=document.getElementById("f"+i);
+if(j===questions[i][2]){
+score+=100/questions.length;
+f.innerHTML="💖 Aferin aşkım!";
+createHeart();
+}else{
+f.innerHTML="😌 Bir daha düşün bakalım";
+}
+answered[i]=true;
+}
+
+function finish(){
+document.getElementById("result").innerHTML=
+`🎉 Final Bitti!<br><br>
+<b>Notun: ${Math.round(score)}/100</b><br><br>
+Bu sınavdan kalamazsın…<br>
+Çünkü benim için hep kazandın 💕`;
+clearInterval(timerInterval);
+}
+
+let time=300;
+const timerInterval=setInterval(()=>{
+time--;
+let m=Math.floor(time/60);
+let s=time%60;
+document.getElementById("time").innerText=
+${m}:${s<10?"0":""}${s};
+if(time<=0){
+finish();
+}
+},1000);
+
+function createHeart(){
+let h=document.createElement("div");
+h.className="heart";
+h.innerHTML="💗";
+h.style.left=Math.random()*100+"%";
+document.body.appendChild(h);
+setTimeout(()=>h.remove(),4000);
+}
+</script>
+
+</body>
+</html>
